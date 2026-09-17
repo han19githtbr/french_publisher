@@ -49,7 +49,15 @@ export default function ContentCard({ item, cat }) {
         )}
       </div>
 
-      <div className="mt-auto pt-4">
+      <div className="mt-auto pt-4 flex flex-col gap-3">
+        <div className="flex items-center text-encre-300 text-[11px] font-medium">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+          </svg>
+          @frances_com_tres_nativos
+        </div>
         <Link
           href={`/generateur?id=${encodeURIComponent(item.id)}`}
           className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-encre-50 hover:bg-encre-100 text-encre-800 text-sm font-semibold py-2.5 transition-colors"

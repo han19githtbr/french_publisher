@@ -230,8 +230,9 @@ function GeneratorInner() {
               } transition-all duration-300`}
             >
               <div className="p-2 border-b border-encre-50 flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-encre-100 flex items-center justify-center text-[10px]">🇫🇷</div>
-                <div className="text-[11px] font-bold">francais.social</div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Logo" className="w-6 h-6 rounded-full object-cover bg-white" />
+                <div className="text-[11px] font-bold">frances_com_tres_nativos</div>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img

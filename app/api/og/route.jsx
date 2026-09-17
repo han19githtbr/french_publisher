@@ -155,7 +155,6 @@ export async function GET(req) {
                 backgroundColor: "rgba(255,255,255,0.08)",
                 borderRadius: 16,
                 border: "1px solid rgba(255,255,255,0.1)",
-                backdropFilter: "blur(8px)", // Not supported by Satori, but safe to add
               }}
             >
               <div style={{ display: "flex", color: accent, fontSize: 22, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5 }}>
@@ -189,8 +188,21 @@ export async function GET(req) {
             zIndex: 10,
           }}
         >
-          <div style={{ display: "flex" }}>Manuel Complet de Français</div>
-          <div style={{ display: "flex", color: accent, fontWeight: 700 }}>@francais.social</div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <img 
+              src={new URL('/logo.png', req.url).toString()} 
+              style={{ width: 80, height: 80, objectFit: "contain", borderRadius: 8 }} 
+            />
+          </div>
+          <div style={{ display: "flex", alignItems: "center", color: accent, fontWeight: 700 }}>
+            {/* Instagram Icon */}
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 10 }}>
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+            </svg>
+            @frances_com_tres_nativos
+          </div>
         </div>
       </div>
     ),
