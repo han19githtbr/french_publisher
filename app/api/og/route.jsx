@@ -20,6 +20,7 @@ export async function GET(req) {
   const platform = searchParams.get("platform") || "instagram-feed";
   const title = searchParams.get("title") || "Manuel Complet de Français";
   const caption = searchParams.get("caption") || "";
+  const pt_caption = searchParams.get("pt_caption") || "";
   const chapitre = searchParams.get("chapitre") || "";
 
   const cat = CATEGORIES[type] || CATEGORIES.anecdote;
@@ -29,6 +30,7 @@ export async function GET(req) {
   const accent = cat.color;
   const titleSize = isStory ? 76 : width < 1150 ? 64 : 58;
   const captionSize = isStory ? 40 : 34;
+  const ptCaptionSize = isStory ? 34 : 28;
 
   return new ImageResponse(
     (
@@ -40,13 +42,40 @@ export async function GET(req) {
           flexDirection: "column",
           justifyContent: "space-between",
           backgroundColor: "#12192E",
-          backgroundImage:
-            `radial-gradient(circle at 85% 8%, ${accent}55 0%, rgba(18,25,46,0) 42%), radial-gradient(circle at 6% 96%, ${accent}33 0%, rgba(18,25,46,0) 45%)`,
           padding: isStory ? "96px 80px" : "72px 76px",
           fontFamily: "sans-serif",
           position: "relative",
+          overflow: "hidden",
         }}
       >
+        {/* Background Image */}
+        {cat.bgImage && (
+          <img
+            src={cat.bgImage}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.25,
+            }}
+          />
+        )}
+
+        {/* Gradient Overlay for Readability */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundImage: "linear-gradient(to bottom, rgba(18,25,46,0.3) 0%, rgba(18,25,46,0.9) 100%)",
+          }}
+        />
+
         {/* decorative corner arc */}
         <div
           style={{
@@ -56,71 +85,95 @@ export async function GET(req) {
             width: 420,
             height: 420,
             borderRadius: "50%",
-            border: `2px solid ${accent}66`,
-            display: "flex",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: -140,
-            left: -140,
-            width: 320,
-            height: 320,
-            borderRadius: "50%",
-            border: `2px solid ${accent}44`,
+            border: `2px solid ${accent}99`,
             display: "flex",
           }}
         />
 
         {/* top bar */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative", zIndex: 10 }}>
           <div
             style={{
               display: "flex",
               alignItems: "center",
               padding: "12px 28px",
               borderRadius: 999,
-              backgroundColor: `${accent}2A`,
-              border: `1.5px solid ${accent}`,
-              color: "#F6F1E7",
+              backgroundColor: `${accent}E6`,
+              color: "#FFF",
               fontSize: 28,
               letterSpacing: 0.5,
+              fontWeight: 600,
             }}
           >
             {cat.short}
           </div>
-          <div style={{ display: "flex", color: "#8E9BBC", fontSize: 26 }}>
+          <div style={{ display: "flex", color: "#E4E7EF", fontSize: 26, fontWeight: 500 }}>
             {chapitre ? `Chap. ${chapitre}` : ""}
           </div>
         </div>
 
         {/* main content */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 28, position: "relative", zIndex: 10, marginTop: "auto", marginBottom: "40px" }}>
           <div
             style={{
               display: "flex",
-              color: "#F6F1E7",
+              color: "#FFF",
               fontSize: titleSize,
               lineHeight: 1.12,
-              fontWeight: 700,
+              fontWeight: 800,
               maxWidth: "100%",
+              textShadow: "0 4px 12px rgba(0,0,0,0.5)",
             }}
           >
-            {truncate(title, isStory ? 92 : 78)}
+            {title}
           </div>
           <div style={{ display: "flex", width: 84, height: 6, backgroundColor: accent, borderRadius: 4 }} />
+          
           <div
             style={{
               display: "flex",
-              color: "#D7DCEC",
+              color: "#F4F5F8",
               fontSize: captionSize,
               lineHeight: 1.42,
-              maxWidth: isStory ? "94%" : "88%",
+              fontWeight: 500,
+              maxWidth: isStory ? "94%" : "90%",
+              textShadow: "0 2px 8px rgba(0,0,0,0.5)",
             }}
           >
-            {truncate(caption, isStory ? 260 : 190)}
+            {truncate(caption, isStory ? 220 : 160)}
           </div>
+
+          {/* Portuguese Translation */}
+          {pt_caption && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 12,
+                marginTop: 16,
+                padding: "24px 32px",
+                backgroundColor: "rgba(255,255,255,0.08)",
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.1)",
+                backdropFilter: "blur(8px)", // Not supported by Satori, but safe to add
+              }}
+            >
+              <div style={{ display: "flex", color: accent, fontSize: 22, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5 }}>
+                🇧🇷 Português
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  color: "#D7DCEC",
+                  fontSize: ptCaptionSize,
+                  lineHeight: 1.4,
+                  fontStyle: "italic",
+                }}
+              >
+                {truncate(pt_caption, isStory ? 200 : 150)}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* footer */}
@@ -129,12 +182,15 @@ export async function GET(req) {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            color: "#8E9BBC",
+            color: "#B9C1D6",
             fontSize: 24,
+            fontWeight: 500,
+            position: "relative",
+            zIndex: 10,
           }}
         >
           <div style={{ display: "flex" }}>Manuel Complet de Français</div>
-          <div style={{ display: "flex", color: accent }}>@francais.social</div>
+          <div style={{ display: "flex", color: accent, fontWeight: 700 }}>@francais.social</div>
         </div>
       </div>
     ),

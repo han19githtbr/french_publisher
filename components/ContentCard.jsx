@@ -4,28 +4,55 @@ import Link from "next/link";
 import CategoryIcon from "./CategoryIcon";
 
 export default function ContentCard({ item, cat }) {
+  // Try to use pt_caption, if not fallback to detail, etc.
+  const ptText = item.pt_caption || item.pt_detail || "";
+
   return (
-    <div className="rounded-xl2 bg-white border border-encre-100 p-5 flex flex-col gap-3 hover:shadow-carte transition-shadow">
+    <div className="group relative rounded-xl2 bg-white border border-encre-100 p-6 flex flex-col gap-4 hover:shadow-carte hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+      {/* Decorative top gradient reflecting category color */}
+      <div 
+        className="absolute top-0 left-0 w-full h-1 opacity-60"
+        style={{ backgroundColor: cat.color }}
+      />
+      
       <div className="flex items-center justify-between">
         <span
-          className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full"
-          style={{ backgroundColor: `${cat.color}1A`, color: cat.color }}
+          className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full border"
+          style={{ backgroundColor: `${cat.color}08`, color: cat.color, borderColor: `${cat.color}20` }}
         >
           <CategoryIcon name={cat.icon} size={12} />
           {cat.short}
         </span>
         {item.region && (
-          <span className="text-[11px] text-encre-400 font-medium">{item.region}</span>
+          <span className="text-[10px] uppercase tracking-widest text-encre-300 font-bold">{item.region}</span>
         )}
       </div>
 
-      <h3 className="font-display text-lg leading-snug text-encre-900">{item.title}</h3>
-      <p className="text-[13.5px] text-encre-400 leading-relaxed line-clamp-3">{item.caption}</p>
+      <div>
+        <h3 className="font-display text-xl leading-tight text-encre-900 mb-2">{item.title}</h3>
+        
+        {/* French Text */}
+        <p className="text-[14px] text-encre-500 leading-relaxed line-clamp-3">
+          {item.caption || item.detail}
+        </p>
 
-      <div className="mt-auto pt-2">
+        {/* Portuguese Text */}
+        {ptText && (
+          <div className="mt-3 pt-3 border-t border-dashed border-encre-100">
+            <div className="flex items-center gap-1.5 mb-1 text-[10px] uppercase tracking-widest font-bold text-encre-300">
+              <span>🇧🇷 Português</span>
+            </div>
+            <p className="text-[13.5px] text-encre-400 font-medium italic leading-relaxed line-clamp-2">
+              {ptText}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="mt-auto pt-4">
         <Link
           href={`/generateur?id=${encodeURIComponent(item.id)}`}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-encre-800 text-parchemin text-sm font-semibold py-2.5 hover:bg-encre-700 transition-colors"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-encre-50 hover:bg-encre-100 text-encre-800 text-sm font-semibold py-2.5 transition-colors"
         >
           Créer un post
         </Link>
