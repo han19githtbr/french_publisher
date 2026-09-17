@@ -1,7 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import { CATEGORIES } from "../../../data/content";
-
-export const runtime = "edge";
+import fs from "fs";
+import path from "path";
 
 const SIZES = {
   "instagram-feed": { width: 1080, height: 1080 },
@@ -32,6 +32,16 @@ export async function GET(req) {
   const captionSize = isStory ? 40 : 34;
   const ptCaptionSize = isStory ? 34 : 28;
 
+  // Load local logo from public folder
+  const logoPath = path.join(process.cwd(), "public", "logo.png");
+  let logoData = "";
+  try {
+    const logoBuffer = fs.readFileSync(logoPath);
+    logoData = `data:image/png;base64,${logoBuffer.toString("base64")}`;
+  } catch (e) {
+    console.error("Error loading logo:", e);
+  }
+
   return new ImageResponse(
     (
       <div
@@ -51,7 +61,7 @@ export async function GET(req) {
         {/* Background Image */}
         {cat.bgImage && (
           <img
-            src={cat.bgImage}
+            src={`${cat.bgImage}&fm=jpg`}
             style={{
               position: "absolute",
               top: 0,
@@ -64,7 +74,7 @@ export async function GET(req) {
           />
         )}
 
-        {/* Gradient Overlay for Readability */}
+        {/* Solid Overlay for Readability (safer than linear-gradient in Satori) */}
         <div
           style={{
             position: "absolute",
@@ -72,7 +82,7 @@ export async function GET(req) {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundImage: "linear-gradient(to bottom, rgba(18,25,46,0.3) 0%, rgba(18,25,46,0.9) 100%)",
+            backgroundColor: "rgba(18,25,46,0.7)",
           }}
         />
 
@@ -122,7 +132,6 @@ export async function GET(req) {
               lineHeight: 1.12,
               fontWeight: 800,
               maxWidth: "100%",
-              textShadow: "0 4px 12px rgba(0,0,0,0.5)",
             }}
           >
             {title}
@@ -137,7 +146,6 @@ export async function GET(req) {
               lineHeight: 1.42,
               fontWeight: 500,
               maxWidth: isStory ? "94%" : "90%",
-              textShadow: "0 2px 8px rgba(0,0,0,0.5)",
             }}
           >
             {truncate(caption, isStory ? 220 : 160)}
@@ -189,10 +197,12 @@ export async function GET(req) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center" }}>
-            <img 
-              src={new URL('/logo.png', req.url).toString()} 
-              style={{ width: 80, height: 80, objectFit: "contain", borderRadius: 8 }} 
-            />
+            {logoData && (
+              <img 
+                src={logoData} 
+                style={{ width: 80, height: 80, objectFit: "contain", borderRadius: 8 }} 
+              />
+            )}
           </div>
           <div style={{ display: "flex", alignItems: "center", color: accent, fontWeight: 700 }}>
             {/* Instagram Icon */}
